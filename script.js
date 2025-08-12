@@ -53,10 +53,41 @@ function drawTemplate() {
     input.addEventListener("input", drawTemplate);
 });
 
-// Download image
 downloadBtn.addEventListener("click", () => {
-    const link = document.createElement("a");
-    link.download = "gold-silver-rate.jpg";
-    link.href = canvas.toDataURL("image/jpeg", 1.0);
-    link.click();
+    Swal.fire({
+        title: 'Are you ready to download?',
+        text: "Your image will be saved with today's gold rate details.",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, download!',
+        cancelButtonText: 'No, cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const link = document.createElement("a");
+
+            // Get today's date
+            const today = new Date();
+            const datePart = today.toLocaleDateString("en-GB").replace(/\//g, "-");
+            const dayName = today.toLocaleDateString("en-US", { weekday: "long" });
+            const monthName = today.toLocaleDateString("en-US", { month: "long" });
+
+            // Create filename dynamically
+            const fileName = `${datePart}-${dayName}-Today-GoldRate-Priya-Thanga-Maligai-Thanjavur-${monthName}.jpg`;
+
+            link.download = fileName;
+            link.href = canvas.toDataURL("image/jpeg", 1.0);
+            link.click();
+
+            // Show success message
+            Swal.fire(
+                'Downloaded!',
+                'Your gold rate image has been saved.',
+                'success'
+            );
+        }
+    });
 });
+
+
