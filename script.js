@@ -6,32 +6,24 @@ const goldInput = document.getElementById("goldRate");
 const silverInput = document.getElementById("silverRate");
 const downloadBtn = document.getElementById("downloadBtn");
 
+// Set today's date as default in yyyy-mm-dd format
+const today = new Date();
+const yyyy = today.getFullYear();
+const mm = String(today.getMonth() + 1).padStart(2, '0');
+const dd = String(today.getDate()).padStart(2, '0');
+dateInput.value = `${yyyy}-${mm}-${dd}`;
+
 const templateImage = new Image();
-templateImage.src = "template.jpeg"; // replace with your flyer image
+templateImage.src = "template.jpeg";
 
 templateImage.onload = function () {
     drawTemplate();
 };
 
-// Format date for canvas (DD.MM.YYYY)
+// Format date for canvas
 function formatDateForCanvas(dateValue) {
     if (!dateValue) return "";
     const date = new Date(dateValue);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}.${month}.${year}`;
-}
-
-// Format rates with 2 decimals
-function formatRate(rateValue) {
-    if (rateValue === "" || isNaN(rateValue)) return "";
-    return parseFloat(rateValue).toFixed(2);
-}
-
-function formatDateForCanvas(dateInputValue) {
-    if (!dateInputValue) return ""; // if empty, avoid crash
-    const date = new Date(dateInputValue);
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
@@ -47,26 +39,24 @@ function drawTemplate() {
     ctx.textAlign = "left";
     ctx.fillText(`Date: ${formatDateForCanvas(dateInput.value)}`, 25, 180);
 
-    // Gold rate with .00
+    // Gold rate
     ctx.font = "bold 48px 'Square721 BT Roman'";
     ctx.fillStyle = "#ffffff";
     ctx.fillText(parseFloat(goldInput.value || 0).toFixed(2), 370, 365);
 
-    // Silver rate with .00
-    ctx.fillStyle = "#ffffff";
+    // Silver rate
     ctx.fillText(parseFloat(silverInput.value || 0).toFixed(2), 370, 465);
 }
 
-// Live update on typing
+// Live update
 [dateInput, goldInput, silverInput].forEach(input => {
     input.addEventListener("input", drawTemplate);
 });
 
-// Download updated image as high-quality JPG
+// Download image
 downloadBtn.addEventListener("click", () => {
     const link = document.createElement("a");
     link.download = "gold-silver-rate.jpg";
-    link.href = canvas.toDataURL("image/jpeg", 1.0); // 1.0 = highest quality
+    link.href = canvas.toDataURL("image/jpeg", 1.0);
     link.click();
 });
-
